@@ -46,7 +46,7 @@ registerRouter.post('/register', async (req, res) => {
 			}
 		})
 
-		return res.status(201).json(user)
+		return res.status(201).json({ message: 'Usuário criado' })
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			return res.status(400).json(error.errors.map((error) => error.message))
