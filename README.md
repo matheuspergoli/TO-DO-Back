@@ -3,8 +3,8 @@
 
 #### Register user
 
-```http
-  POST /register
+```
+POST /register
 ```
 
 | Parameter | Type     | Description                | Validations |
