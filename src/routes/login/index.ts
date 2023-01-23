@@ -20,7 +20,7 @@ loginRouter.all('/login', (req, res, next) => {
 
 loginRouter.post('/login', async (req, res) => {
 	try {
-		const { email, password } = await loginValidation.parseAsync(req.body)
+		const { email, password } = loginValidation.parse(req.body)
 
 		if (!email || !password) {
 			return res.status(400).json({ message: 'Preencha todos os campos' })
@@ -60,7 +60,7 @@ loginRouter.post('/login', async (req, res) => {
 		})
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			return res.status(400).json(error.errors.map((error) => error.message))
+			return res.status(400).json(error.issues[0].message)
 		}
 	}
 })
