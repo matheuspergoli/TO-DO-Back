@@ -1,3 +1,4 @@
+
 ## API Reference
 
 #### Register user
@@ -22,3 +23,4 @@
 | :-------- | :------- | :-------------------------------- | :---------- |
 | `email`      | `string` | **Required** | **Min 1 Character**
 | `password`      | `string` | **Required** | **Min 6 Character**
+
