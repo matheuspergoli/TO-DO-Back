@@ -19,7 +19,7 @@ registerRouter.all('/register', (req, res, next) => {
 
 registerRouter.post('/register', async (req, res) => {
 	try {
-		const { name, email, password } = await registerValidation.parseAsync(req.body)
+		const { name, email, password } = registerValidation.parse(req.body)
 
 		if (!name || !email || !password) {
 			return res.status(400).json({ message: 'Preencha todos os campos' })
@@ -49,7 +49,7 @@ registerRouter.post('/register', async (req, res) => {
 		return res.status(201).json({ message: 'Usuário criado' })
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			return res.status(400).json(error.errors.map((error) => error.message))
+			return res.status(400).json(error.issues[0].message)
 		}
 	}
 })
