@@ -15,8 +15,8 @@ POST /register
 
 #### Login user
 
-```http
-  POST /login
+```
+POST /login
 ```
 
 | Parameter | Type     | Description                       | Validations |
