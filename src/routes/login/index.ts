@@ -60,7 +60,7 @@ loginRouter.post('/login', async (req, res) => {
 		})
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			return res.status(400).json(error.issues[0].message)
+			return res.status(400).json(error.issues[0])
 		}
 	}
 })
