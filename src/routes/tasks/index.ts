@@ -8,13 +8,23 @@ export const tasksRouter = Router()
 
 tasksRouter.get('/tasks', async (req, res) => {
 	const userId = req.userId
+	let { page } = req.query as any
+	page === undefined ? (page = 1) : ''
 
-	const tasks = await prisma.toDo.findMany({
-		where: {
-			userId: userId
-		}
-	})
-
+	const tasks = await prisma.$transaction([
+		prisma.toDo.count({
+			where: {
+				userId: userId
+			}
+		}),
+		prisma.toDo.findMany({
+			skip: (page - 1) * 10,
+			take: 10,
+			where: {
+				userId: userId
+			}
+		})
+	])
 	return res.status(200).json(tasks)
 })
 
