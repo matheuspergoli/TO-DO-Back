@@ -1,6 +1,7 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
+import { swaggerRouter } from './routes/docs'
 import { tasksRouter } from './routes/tasks'
 import { loginRouter } from './routes/login'
 import { registerRouter } from './routes/register'
@@ -13,6 +14,7 @@ app.use(cors())
 app.use(express.json())
 app.use(registerRouter)
 app.use(loginRouter)
+app.use(swaggerRouter)
 
 app.use(authMiddleware)
 app.use(tasksRouter)
