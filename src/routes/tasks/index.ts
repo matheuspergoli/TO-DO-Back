@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import jwt from 'jsonwebtoken'
 import { Router } from 'express'
 import { prisma } from '../../utils/prisma'
 import { tasksValidation } from '../../validations/tasksValidation'
@@ -8,13 +7,24 @@ export const tasksRouter = Router()
 
 tasksRouter.get('/tasks', async (req, res) => {
 	const userId = req.userId
+	let { page, qty } = req.query as any
+	page === undefined ? (page = 1) : ''
+	qty === undefined ? (qty = 5) : ''
 
-	const tasks = await prisma.toDo.findMany({
-		where: {
-			userId: userId
-		}
-	})
-
+	const tasks = await prisma.$transaction([
+		prisma.toDo.count({
+			where: {
+				userId: userId
+			}
+		}),
+		prisma.toDo.findMany({
+			skip: (Number(page) - 1) * Number(qty),
+			take: Number(qty),
+			where: {
+				userId: userId
+			}
+		})
+	])
 	return res.status(200).json(tasks)
 })
 
