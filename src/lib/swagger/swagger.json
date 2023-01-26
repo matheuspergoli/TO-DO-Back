@@ -1,0 +1,456 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "To Do - OpenAPI 3.0",
+		"description": "Documentação da API do projeto ToDo\n\nalguns links úteis:\n- [To Do Back Repositório](https://github.com/Mined-Development-Company/TO-DO-Back)",
+		"version": "1.0.0"
+	},
+	"externalDocs": {
+		"description": "Find out more about Swagger",
+		"url": "http://swagger.io"
+	},
+	"servers": [
+		{
+			"url": "long-blue-lemming-fez.cyclic.app",
+			"description": "Produção"
+		},
+		{
+			"url": "localhost:3333",
+			"description": "Desenvolvimento"
+		}
+	],
+	"tags": [
+		{
+			"name": "User",
+			"description": "Operações para os usuários."
+		},
+		{
+			"name": "Task",
+			"description": "Operações para as tarefas."
+		}
+	],
+	"paths": {
+		"/register": {
+			"post": {
+				"tags": ["User"],
+				"summary": "Cadastra um novo usuário.",
+				"operationId": "registerUser",
+				"requestBody": {
+					"$ref": "#/components/requestBodies/RegisterUser"
+				},
+				"responses": {
+					"201": {
+						"$ref": "#/components/responses/RegisterUser"
+					},
+					"400": {
+						"$ref": "#/components/responses/ErrorDefault"
+					}
+				}
+			}
+		},
+		"/login": {
+			"post": {
+				"tags": ["User"],
+				"summary": "Faça autenticação de um usuário utilizando email e senha.",
+				"operationId": "loginUser",
+				"requestBody": {
+					"$ref": "#/components/requestBodies/LoginUser"
+				},
+				"responses": {
+					"200": {
+						"$ref": "#/components/responses/LoginUser"
+					},
+					"400": {
+						"$ref": "#/components/responses/ErrorDefault"
+					}
+				}
+			}
+		},
+		"/tasks": {
+			"get": {
+				"tags": ["Task"],
+				"summary": "Obter a lista de todas as tarefas de um usuário.",
+				"security": [
+					{
+						"bearerAuth": ["Authorization"]
+					}
+				],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "authorization",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "É necessário um token autenticado para utilizar essa rota."
+					}
+				],
+				"operationId": "listTasks",
+				"responses": {
+					"200": {
+						"$ref": "#/components/responses/ArrayOfTasks"
+					}
+				}
+			},
+			"post": {
+				"tags": ["Task"],
+				"summary": "Cria uma nova task para o usuário",
+				"security": [
+					{
+						"bearerAuth": ["Authorization"]
+					}
+				],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "authorization",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "É necessário um token autenticado para utilizar essa rota."
+					}
+				],
+				"operationId": "createTask",
+				"requestBody": {
+					"$ref": "#/components/requestBodies/CreateTask"
+				},
+				"responses": {
+					"201": {
+						"description": "Sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"example": {
+										"message": "Tarefa criada com sucesso."
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro ao realizar o cadastro de uma nova tarefa.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tasks/{id}": {
+			"put": {
+				"tags": ["Task"],
+				"summary": "Atualizar uma tarefa.",
+				"description": "O resultado dessa rota será em atualizar o status da tarefa como concluido ou não.",
+				"security": [
+					{
+						"bearerAuth": ["Authorization"]
+					}
+				],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "authorization",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "É necessário um token autenticado para utilizar essa rota."
+					},
+					{
+						"in": "path",
+						"name": "id",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "É necessário o id de uma tarefa."
+					}
+				],
+				"operationId": "updateTask",
+				"responses": {
+					"200": {
+						"description": "Sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								},
+								"example": {
+									"message": "Tarefa atualizada com sucesso"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/ErrorDefault"
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Task"],
+				"summary": "Deletar uma tarefa.",
+				"security": [
+					{
+						"bearerAuth": ["Authorization"]
+					}
+				],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "authorization",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "É necessário um token autenticado para utilizar essa rota."
+					},
+					{
+						"in": "path",
+						"name": "id",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "É necessário o id de uma tarefa."
+					}
+				],
+				"operationId": "deleteTask",
+				"responses": {
+					"200": {
+						"description": "Sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								},
+								"example": {
+									"message": "Tarefa deletada com sucesso"
+								}
+							}
+						}
+					},
+					"400": {
+						"$ref": "#/components/responses/ErrorDefault"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"User": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"example": 1
+					},
+					"name": {
+						"type": "string",
+						"example": "Carla"
+					},
+					"email": {
+						"type": "string",
+						"example": "carla@email.com"
+					},
+					"password": {
+						"type": "string",
+						"example": 123456
+					}
+				},
+				"xml": {
+					"name": "user"
+				}
+			},
+			"Tasks": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer"
+					},
+					"title": {
+						"type": "string"
+					},
+					"completed": {
+						"type": "boolean"
+					},
+					"priority": {
+						"type": "integer"
+					},
+					"userId": {
+						"type": "integer"
+					}
+				},
+				"xml": [
+					{
+						"name": "Tasks"
+					}
+				]
+			}
+		},
+		"responses": {
+			"ErrorDefault": {
+				"description": "Falha.",
+				"content": {
+					"application/json": {
+						"schema": {
+							"type": "object",
+							"properties": {
+								"message": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
+			},
+			"RegisterUser": {
+				"description": "Sucesso.",
+				"content": {
+					"application/json": {
+						"schema": {
+							"type": "object"
+						},
+						"example": {
+							"message": "Usuário criado."
+						}
+					}
+				}
+			},
+			"LoginUser": {
+				"description": "Autenticação realizada com sucesso.",
+				"content": {
+					"application/json": {
+						"schema": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"email": {
+									"type": "string"
+								},
+								"token": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
+			},
+			"ArrayOfTasks": {
+				"description": "Lista das tarefas.",
+				"content": {
+					"application/json": {
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/Tasks"
+							}
+						}
+					}
+				}
+			}
+		},
+		"requestBodies": {
+			"CreateTask": {
+				"description": "Criar uma nova tarefa.",
+				"content": {
+					"application/json": {
+						"schema": {
+							"required": ["title", "priority"],
+							"type": "object",
+							"properties": {
+								"title": {
+									"type": "string"
+								},
+								"priority": {
+									"type": "integer",
+									"minimum": 0
+								}
+							}
+						}
+					}
+				}
+			},
+			"RegisterUser": {
+				"description": "Objeto necessário para criar um usuário.",
+				"content": {
+					"application/json": {
+						"schema": {
+							"required": ["name", "email", "password"],
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"email": {
+									"type": "string"
+								},
+								"password": {
+									"type": "string"
+								}
+							},
+							"example": {
+								"name": "name example",
+								"email": "email@example.com",
+								"password": "password1234"
+							}
+						}
+					}
+				}
+			},
+			"LoginUser": {
+				"description": "Objeto necessário para autenticação de um usuário.",
+				"content": {
+					"application/json": {
+						"schema": {
+							"required": ["email", "password"],
+							"type": "object",
+							"properties": {
+								"email": {
+									"type": "string"
+								},
+								"password": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	}
+}
